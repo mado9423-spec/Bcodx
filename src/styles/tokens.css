@@ -1,4 +1,4 @@
-/* ============ Bcodx design tokens ============ */
+/* ============ Bhub design tokens ============ */
 :root {
   --font: 'Cairo Variable', 'Cairo', system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
 
@@ -8,9 +8,10 @@
   --brand-700: #4a2bd1;
   --brand-100: #ece8ff;
   --brand-50: #f5f3ff;
-  --c-teal: #00b8a9;
+  --c-teal: #0fb5ae; /* = Bhub logo teal */
   --c-blue: #3b82f6;
   --c-amber: #f5b50a;
+  --logo-yellow: #ffc93c; /* Bhub logo: teal #0fb5ae · coral #ff6b5b (--c-coral) · yellow #ffc93c · ink #1d2b3a · paper #f7f1e5 */
   --c-orange: #ff9a3c;
   --c-coral: #ff6b5b;
   --c-rose: #e5385f;

@@ -21,7 +21,7 @@ export interface TeamApi {
   remove(uid: string): Promise<void>;
 }
 
-const KEY = 'bcodx:demo:team:v1';
+const KEY = 'bhub:demo:team:v1';
 
 interface DemoTeam {
   members: Member[];
@@ -37,11 +37,11 @@ function loadDemo(): DemoTeam {
   }
   return {
     members: [
-      { uid: 'demo-user', name: 'مدير النظام', email: 'owner@demo.bcodx.app', role: 'owner' },
-      { uid: 'u2', name: 'مدير المبيعات', email: 'sales.manager@demo.bcodx.app', role: 'manager' },
-      { uid: 'u3', name: 'أحمد الخالدي', email: 'ahmed@demo.bcodx.app', role: 'rep', repId: 'r1' },
-      { uid: 'u4', name: 'أمين المخزن', email: 'store@demo.bcodx.app', role: 'storekeeper' },
-      { uid: 'u5', name: 'المحاسب', email: 'accounts@demo.bcodx.app', role: 'accountant' },
+      { uid: 'demo-user', name: 'مدير النظام', email: 'owner@demo.bhub.app', role: 'owner' },
+      { uid: 'u2', name: 'مدير المبيعات', email: 'sales.manager@demo.bhub.app', role: 'manager' },
+      { uid: 'u3', name: 'أحمد الخالدي', email: 'ahmed@demo.bhub.app', role: 'rep', repId: 'r1' },
+      { uid: 'u4', name: 'أمين المخزن', email: 'store@demo.bhub.app', role: 'storekeeper' },
+      { uid: 'u5', name: 'المحاسب', email: 'accounts@demo.bhub.app', role: 'accountant' },
     ],
     invites: [],
   };

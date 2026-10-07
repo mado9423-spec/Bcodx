@@ -9,13 +9,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'Bcodx — منظومة التوزيع الذكية',
-        short_name: 'Bcodx',
+        name: 'Bhub — منظومة التوزيع الذكية',
+        short_name: 'Bhub',
         description: 'إدارة الموزعين والمندوبين والطلبات والمخزون والتحصيل في مكان واحد',
         lang: 'ar',
         dir: 'rtl',
         theme_color: '#6d4aff',
-        background_color: '#f5f3ff',
+        background_color: '#f7f1e5',
         display: 'standalone',
         start_url: '/',
         icons: [

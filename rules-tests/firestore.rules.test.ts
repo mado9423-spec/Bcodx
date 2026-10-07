@@ -10,7 +10,7 @@ const B = 'compB';
 type Role = 'owner' | 'manager' | 'rep' | 'storekeeper' | 'accountant';
 
 beforeAll(async () => {
-  env = await initializeTestEnvironment({ projectId: 'demo-bcodx-rules', firestore: { rules: readFileSync('firestore.rules', 'utf8'), host: '127.0.0.1', port: 8080 } });
+  env = await initializeTestEnvironment({ projectId: 'demo-bhub-rules', firestore: { rules: readFileSync('firestore.rules', 'utf8'), host: '127.0.0.1', port: 8080 } });
 });
 afterAll(async () => env.cleanup());
 

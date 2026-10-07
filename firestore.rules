@@ -1,7 +1,7 @@
 rules_version = '2';
 
 // =====================================================================
-//  Bcodx — قواعد أمان Firestore
+//  Bhub — قواعد أمان Firestore
 //  - كل شركة معزولة تمامًا: companies/{companyId}/...
 //  - الصلاحيات حسب الدور (owner / manager / rep / storekeeper / accountant)
 //    والدور يُقرأ من users/{uid} (لا يمكن للمستخدم تعديله بنفسه).

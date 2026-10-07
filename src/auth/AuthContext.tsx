@@ -44,7 +44,7 @@ export function useAuth(): AuthValue {
 }
 
 const DEMO_ID = 'demo';
-const SESSION_KEY = 'bcodx:demo:session';
+const SESSION_KEY = 'bhub:demo:session';
 
 export const DEMO_PROFILES: Record<Role, { name: string; repId?: string }> = {
   owner: { name: 'مدير النظام' },
@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (role) {
       const store = buildDemoStore();
       setDemoStore(store);
-      setProfile({ uid: 'demo-user', email: 'demo@bcodx.app', companyId: DEMO_ID, role, ...DEMO_PROFILES[role] });
+      setProfile({ uid: 'demo-user', email: 'demo@bhub.app', companyId: DEMO_ID, role, ...DEMO_PROFILES[role] });
       setStatus('ready');
     } else {
       setStatus('signedOut');
@@ -134,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
     setDemoStore((s) => s ?? buildDemoStore());
-    setProfile({ uid: 'demo-user', email: 'demo@bcodx.app', companyId: DEMO_ID, role, ...DEMO_PROFILES[role] });
+    setProfile({ uid: 'demo-user', email: 'demo@bhub.app', companyId: DEMO_ID, role, ...DEMO_PROFILES[role] });
     setStatus('ready');
   }, []);
 

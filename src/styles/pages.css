@@ -163,10 +163,31 @@
     display: none;
   }
 }
+@media (max-height: 800px) {
+  .fc2 {
+    display: none;
+  }
+  .fc3 {
+    bottom: 3%;
+  }
+}
 .auth-hero-text {
   position: relative;
   z-index: 1;
   max-width: 560px;
+}
+.auth-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #fff;
 }
 .auth-pill {
   display: inline-flex;

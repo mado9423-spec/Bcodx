@@ -7,6 +7,7 @@ import { useData } from '../data/DataContext';
 import { ROLE_LABELS, type Role } from '../data/types';
 import { Avatar } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
+import { LogoTile, Wordmark } from '../components/Logo';
 import { Modal } from '../components/ui/Modal';
 import { Skeleton } from '../components/ui/Misc';
 import { can } from '../lib/permissions';
@@ -14,19 +15,6 @@ import { useTheme } from '../lib/theme';
 import { CommandPalette } from './CommandPalette';
 import { NAV } from './nav';
 import { useAlerts } from './useAlerts';
-
-function Logo({ size = 44 }: { size?: number }) {
-  return (
-    <div className="brand-mark" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 64 44" width={size * 0.62} height={size * 0.44} aria-hidden>
-        <rect x="2" y="6" width="34" height="24" rx="4" fill="#fff" />
-        <path d="M38 14h12a5 5 0 0 1 4 2l7 9v5H38z" fill="#5eead4" />
-        <circle cx="16" cy="34" r="6" fill="#1e1b4b" stroke="#fff" strokeWidth="2.5" />
-        <circle cx="48" cy="34" r="6" fill="#1e1b4b" stroke="#fff" strokeWidth="2.5" />
-      </svg>
-    </div>
-  );
-}
 
 function SyncChip() {
   const { sync } = useData();
@@ -151,9 +139,9 @@ function Sidebar({ role, pendingOrders }: { role: Role; pendingOrders: number })
   return (
     <aside className="sidebar" aria-label="القائمة الرئيسية">
       <div className="brand">
-        <Logo />
+        <LogoTile />
         <div>
-          <div className="brand-name">Bcodx</div>
+          <div className="brand-name"><Wordmark height={21} /></div>
           <div className="brand-tag">منظومة التوزيع الذكية</div>
         </div>
       </div>
@@ -277,7 +265,8 @@ export function AppShell(): ReactNode {
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
-    document.title = `${titleFor(loc.pathname) || 'Bcodx'} — Bcodx`;
+    const t = titleFor(loc.pathname);
+    document.title = t ? `${t} — Bhub` : 'Bhub — منظومة التوزيع الذكية';
   }, [loc.pathname]);
 
   return (

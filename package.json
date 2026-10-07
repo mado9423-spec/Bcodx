@@ -1,8 +1,8 @@
 {
-  "name": "bcodx",
+  "name": "bhub",
   "private": true,
   "version": "1.0.0",
-  "description": "Bcodx — منظومة إدارة الموزعين ومندوبي المبيعات (React + Firebase)",
+  "description": "Bhub — منظومة إدارة الموزعين ومندوبي المبيعات (React + Firebase)",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,9 +10,9 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-bcodx-rules \"vitest run --config vitest.rules.config.ts\"",
-    "emulators": "firebase emulators:start --only auth,firestore --project demo-bcodx",
-    "dev:emulator": "VITE_USE_EMULATOR=true VITE_FIREBASE_API_KEY=demo VITE_FIREBASE_PROJECT_ID=demo-bcodx VITE_FIREBASE_APP_ID=demo vite"
+    "test:rules": "firebase emulators:exec --only firestore --project demo-bhub-rules \"vitest run --config vitest.rules.config.ts\"",
+    "emulators": "firebase emulators:start --only auth,firestore --project demo-bhub",
+    "dev:emulator": "VITE_USE_EMULATOR=true VITE_FIREBASE_API_KEY=demo VITE_FIREBASE_PROJECT_ID=demo-bhub VITE_FIREBASE_APP_ID=demo vite"
   },
   "dependencies": {
     "@fontsource-variable/cairo": "^5.3.0",

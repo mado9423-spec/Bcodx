@@ -35,7 +35,7 @@ export class LocalStore implements Store {
 
   constructor(companyId: string, snapshot: LocalSnapshot) {
     this.companyId = companyId;
-    this.storageKey = `bcodx:demo:${companyId}:v2`;
+    this.storageKey = `bhub:demo:${companyId}:v2`;
     this.company = snapshot.company;
     for (const c of COLLS) {
       const t: Table = new Map();
@@ -47,7 +47,7 @@ export class LocalStore implements Store {
 
   static load(companyId: string): LocalSnapshot | null {
     try {
-      const raw = localStorage.getItem(`bcodx:demo:${companyId}:v2`);
+      const raw = localStorage.getItem(`bhub:demo:${companyId}:v2`);
       return raw ? (JSON.parse(raw) as LocalSnapshot) : null;
     } catch {
       return null;
@@ -56,7 +56,7 @@ export class LocalStore implements Store {
 
   static clear(companyId: string) {
     try {
-      localStorage.removeItem(`bcodx:demo:${companyId}:v2`);
+      localStorage.removeItem(`bhub:demo:${companyId}:v2`);
     } catch {
       /* التخزين غير متاح */
     }

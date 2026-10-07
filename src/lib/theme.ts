@@ -18,7 +18,7 @@ export function useTheme(): [Theme, () => void] {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try {
-      localStorage.setItem('bcodx:theme', next);
+      localStorage.setItem('bhub:theme', next);
     } catch {
       /* ignore */
     }

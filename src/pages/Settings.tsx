@@ -151,7 +151,7 @@ function DataTab() {
     const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), company, customers, products, warehouses, stock, orders, collections, reps, zones, offers, visits, movements }, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `bcodx-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `bhub-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   };

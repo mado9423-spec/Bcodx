@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ClipboardList, Eye, EyeOff, Lock, Mail, MailCheck, MessageCircle, Rocket, ShieldCheck, Sparkles, User, Wallet, WifiOff } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Field, TextInput } from '../components/ui/Fields';
+import { LogoTile, Wordmark } from '../components/Logo';
 import { Segmented } from '../components/ui/Fields';
 import { ROLE_LABELS, type Role } from '../data/types';
 import { authErrorMessage, DEMO_PROFILES, useAuth } from './AuthContext';
@@ -47,11 +48,13 @@ function HeroArt() {
           animate={{ x: [0, 180, 340, 480], y: [0, -100, -60, -190] }}
           transition={{ repeat: Infinity, duration: 7, ease: 'easeInOut', repeatType: 'reverse' }}
         >
-          <g transform="translate(-14,226)">
-            <rect x="0" y="6" width="26" height="18" rx="3" fill="#fff" />
-            <path d="M27 11h9l6 7v6H27z" fill="#5eead4" />
-            <circle cx="9" cy="26" r="4.5" fill="#1e1b4b" />
-            <circle cx="35" cy="26" r="4.5" fill="#1e1b4b" />
+          {/* a "shipment" travelling between hubs: the Bhub mark in miniature */}
+          <g transform="translate(6,240) scale(0.2)">
+            <polygon points="-60.5,-77 -6.8,-46 -6.8,16 -60.5,47 -114.2,16 -114.2,-46" fill="#0FB5AE" />
+            <polygon points="60.5,-77 114.2,-46 114.2,16 60.5,47 6.8,16 6.8,-46" fill="#FF6B5B" />
+            <polygon points="0,28 53.7,59 53.7,121 0,152 -53.7,121 -53.7,59" fill="#FFC93C" />
+            <circle r="15" fill="#1D2B3A" />
+            <circle r="5.5" fill="#F7F1E5" />
           </g>
         </motion.g>
       </svg>
@@ -86,9 +89,15 @@ function Hero() {
       <HeroArt />
       <div className="auth-hero-text">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <span className="auth-pill">
-            <Sparkles size={14} /> منظومة إدارة الموزعين
-          </span>
+          <div className="auth-top">
+            <div className="auth-brand">
+              <LogoTile size={52} animate />
+              <Wordmark height={28} />
+            </div>
+            <span className="auth-pill">
+              <Sparkles size={14} /> منظومة إدارة الموزعين
+            </span>
+          </div>
           <h1>
             من واتساب وإكسل ودفتر…
             <br />
@@ -353,16 +362,9 @@ export function AuthPages() {
       <section className="auth-panel">
         <motion.div className="auth-card" initial={{ opacity: 0, y: 30, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 26, delay: 0.1 }}>
           <div className="auth-card-head">
-            <div className="brand-mark">
-              <svg viewBox="0 0 64 44" width="27" height="19" aria-hidden>
-                <rect x="2" y="6" width="34" height="24" rx="4" fill="#fff" />
-                <path d="M38 14h12a5 5 0 0 1 4 2l7 9v5H38z" fill="#5eead4" />
-                <circle cx="16" cy="34" r="6" fill="#1e1b4b" stroke="#fff" strokeWidth="2.5" />
-                <circle cx="48" cy="34" r="6" fill="#1e1b4b" stroke="#fff" strokeWidth="2.5" />
-              </svg>
-            </div>
+            <LogoTile animate />
             <div>
-              <div className="brand-name">Bcodx</div>
+              <div className="brand-name"><Wordmark height={22} /></div>
               <div className="muted small">{status === 'needsCompany' ? 'خطوة أخيرة' : 'مرحبًا بك'}</div>
             </div>
             {mode === 'demo' && (

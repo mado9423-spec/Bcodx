@@ -18,7 +18,7 @@ import { fmtNum } from '../lib/format';
 import { can } from '../lib/permissions';
 import { isOfferLive, priceCart, priceFor } from '../lib/pricing';
 
-const DRAFT_KEY = 'bcodx:draft:order';
+const DRAFT_KEY = 'bhub:draft:order';
 
 interface Draft {
   customerId?: string;

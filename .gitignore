@@ -9,3 +9,7 @@ firebase-debug.log
 firestore-debug.log
 *.local
 .DS_Store
+
+# scratch
+shots/
+.vercel

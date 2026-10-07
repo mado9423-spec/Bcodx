@@ -33,7 +33,7 @@ ${order.orderDiscount ? `<div><span>${esc(order.orderOfferName ?? 'خصم الف
 <div class="g"><span>الإجمالي</span><span>${money(order.total)}</span></div>
 ${order.paidNow ? `<div><span>المدفوع</span><span>${money(order.paidNow)}</span></div><div><span>المتبقي</span><span>${money(order.total - order.paidNow)}</span></div>` : ''}</div>
 ${order.note ? `<p class="s">ملاحظة: ${esc(order.note)}</p>` : ''}
-<div class="f">شكرًا لتعاملكم معنا — Bcodx</div>
+<div class="f">شكرًا لتعاملكم معنا — Bhub</div>
 <script>window.onload=function(){setTimeout(function(){window.print()},250)}<\/script></body></html>`;
   const w = window.open('', '_blank', 'width=820,height=900');
   if (!w) return false;
