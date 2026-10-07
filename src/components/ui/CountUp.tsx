@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { animate, useReducedMotion } from 'framer-motion';
 import { fmtNum } from '../../lib/format';
 
-export function CountUp({ value, format = (n: number) => fmtNum(Math.round(n)), duration = 0.9 }: { value: number; format?: (n: number) => string; duration?: number }) {
+/** أرقام الواجهة الكبيرة بخط متناسب (لا tabular) — الأعمدة المحاذاة وحدها تستخدم tabular */
+export function CountUp({ value, format = (n: number) => fmtNum(Math.round(n)), duration = 0.9, tabular = false }: { value: number; format?: (n: number) => string; duration?: number; tabular?: boolean }) {
   const reduce = useReducedMotion();
   const [shown, setShown] = useState(reduce ? value : 0);
   const prev = useRef(reduce ? value : 0);
@@ -22,5 +23,5 @@ export function CountUp({ value, format = (n: number) => fmtNum(Math.round(n)), 
     });
     return () => c.stop();
   }, [value, duration, reduce]);
-  return <span className="num">{format(shown)}</span>;
+  return <span className={tabular ? 'num' : undefined}>{format(shown)}</span>;
 }

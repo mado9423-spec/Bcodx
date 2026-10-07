@@ -1,8 +1,8 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Printer } from 'lucide-react';
+import { BarChart3, Download, Printer } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { AreaChart, BarList, Donut } from '../components/ui/Charts';
+import { AgingBreakdown, AreaChart, BarList, ChartCard } from '../components/ui/Charts';
 import { CountUp } from '../components/ui/CountUp';
 import { Segmented, Tabs } from '../components/ui/Fields';
 import { EmptyState, PageHeader, rise, stagger } from '../components/ui/Misc';
@@ -31,7 +31,7 @@ function ReportTable<T>({ cols, rows, csv, empty = 'لا بيانات ضمن ه�
         <h3>التفاصيل</h3>
         <Button size="sm" leading={<Download size={14} />} onClick={() => downloadCsv(csv, [cols.map((c) => c.label), ...rows.map((r) => cols.map((c) => c.value(r)))])} disabled={rows.length === 0}>CSV</Button>
       </div>
-      {rows.length === 0 ? <EmptyState icon="📊" title={empty} /> : (
+      {rows.length === 0 ? <EmptyState icon={<BarChart3 size={34} />} title={empty} /> : (
         <div className="table-wrap" style={{ marginTop: '0.6rem' }}>
           <table className="table">
             <thead><tr>{cols.map((c) => <th key={c.label} className={c.num ? 'num' : ''}>{c.label}</th>)}</tr></thead>
@@ -158,7 +158,7 @@ export default function Reports() {
               <Stat label="متوسط الطلب" value={avgOrder} format={(n) => money(n, { compact: true })} color="#f5b50a" />
               <Stat label="خصومات ممنوحة" value={discounts} format={(n) => money(n, { compact: true })} color="#ff6b5b" />
             </div>
-            <motion.div variants={rise} className="card"><div className="card-head"><h3>المبيعات اليومية</h3></div><div className="card-body"><AreaChart animKey={`${period}`} labels={series.labels} series={[{ label: 'المبيعات', color: '#6d4aff', values: series.sales }]} format={fmtCompact} /></div></motion.div>
+            <ChartCard title="المبيعات اليومية" table={{ head: ['اليوم', 'المبيعات'], rows: series.labels.map((l, i) => [l, money(Math.round(series.sales[i] ?? 0))]).reverse() }}><AreaChart animKey={`${period}`} labels={series.labels} ariaLabel="المبيعات اليومية" series={[{ key: 'sales', label: 'المبيعات', color: 'var(--chart-1)', values: series.sales }]} format={fmtCompact} /></ChartCard>
             <ReportTable csv="top-customers" rows={topCustomers} cols={[{ label: 'أفضل العملاء', value: (r) => r.name }, { label: 'الطلبات', num: true, value: (r) => r.orders }, { label: 'المبيعات', num: true, value: (r) => r.sales, cell: (r) => money(r.sales) }, { label: 'الحصة', num: true, value: (r) => +((r.sales / Math.max(totalSales, 1)) * 100).toFixed(1), cell: (r) => fmtPct((r.sales / Math.max(totalSales, 1)) * 100, 1) }]} />
           </>
         )}
@@ -169,19 +169,19 @@ export default function Reports() {
               <Stat label="الربح التقديري" value={profit} format={(n) => money(n, { compact: true })} color="#12b76a" />
               <Stat label="أصناف مباعة" value={productRows.length} format={(n) => fmtNum(Math.round(n))} color="#00b8a9" />
             </div>
-            <motion.div variants={rise} className="card"><div className="card-head"><h3>الأعلى مبيعًا</h3></div><div className="card-body"><BarList items={productRows.slice(0, 8).map((p) => ({ label: `${p.emoji} ${p.name}`, value: p.revenue, display: money(p.revenue, { compact: true }), color: '#6d4aff' }))} /></div></motion.div>
+            <ChartCard title="الأعلى مبيعًا" table={{ head: ['الصنف', 'الإيراد'], rows: productRows.slice(0, 8).map((p) => [`${p.emoji} ${p.name}`, money(Math.round(p.revenue))]) }}><BarList items={productRows.slice(0, 8).map((p) => ({ label: `${p.emoji} ${p.name}`, value: p.revenue, display: money(Math.round(p.revenue), { compact: true }) }))} /></ChartCard>
             <ReportTable csv="products" rows={productRows} cols={[{ label: 'الصنف', value: (r) => r.name, cell: (r) => <b>{r.emoji} {r.name}</b> }, { label: 'الفئة', value: (r) => r.category }, { label: 'الكمية', num: true, value: (r) => r.qty }, { label: 'مجاني', num: true, value: (r) => r.free }, { label: 'الإيراد', num: true, value: (r) => r.revenue, cell: (r) => money(r.revenue) }, { label: 'الربح', num: true, value: (r) => r.profit, cell: (r) => <span style={{ color: r.profit >= 0 ? 'var(--ok)' : 'var(--bad)', fontWeight: 700 }}>{money(r.profit)}</span> }, { label: 'الهامش %', num: true, value: (r) => +((r.profit / Math.max(r.revenue, 1)) * 100).toFixed(1), cell: (r) => fmtPct((r.profit / Math.max(r.revenue, 1)) * 100, 1) }]} />
           </>
         )}
         {report === 'reps' && (
           <>
-            <motion.div variants={rise} className="card"><div className="card-head"><h3>المبيعات حسب المندوب</h3></div><div className="card-body"><BarList items={repRows.map((r) => ({ label: r.rep.name, value: r.sales, color: r.rep.color, display: money(r.sales, { compact: true }) }))} /></div></motion.div>
+            <ChartCard title="المبيعات حسب المندوب" table={{ head: ['المندوب', 'المبيعات'], rows: repRows.map((r) => [r.rep.name, money(Math.round(r.sales))]) }}><BarList items={repRows.map((r) => ({ label: r.rep.name, value: r.sales, display: money(Math.round(r.sales), { compact: true }) }))} /></ChartCard>
             <ReportTable csv="reps" rows={repRows} cols={[{ label: 'المندوب', value: (r) => r.rep.name }, { label: 'الطلبات', num: true, value: (r) => r.orders }, { label: 'المبيعات', num: true, value: (r) => r.sales, cell: (r) => money(r.sales) }, { label: 'متوسط الطلب', num: true, value: (r) => Math.round(r.orders ? r.sales / r.orders : 0), cell: (r) => money(r.orders ? r.sales / r.orders : 0, { compact: true }) }, { label: 'التحصيل', num: true, value: (r) => r.cols, cell: (r) => money(r.cols) }, { label: 'نسبة التحصيل من المبيعات', num: true, value: (r) => +((r.cols / Math.max(r.sales, 1)) * 100).toFixed(1), cell: (r) => fmtPct((r.cols / Math.max(r.sales, 1)) * 100) }]} />
           </>
         )}
         {report === 'zones' && (
           <>
-            <motion.div variants={rise} className="card"><div className="card-head"><h3>المبيعات حسب المنطقة</h3></div><div className="card-body"><BarList items={zoneRows.map((z) => ({ label: z.zone.name, value: z.sales, color: z.zone.color, display: money(z.sales, { compact: true }) }))} /></div></motion.div>
+            <ChartCard title="المبيعات حسب المنطقة" table={{ head: ['المنطقة', 'المبيعات'], rows: zoneRows.map((z) => [z.zone.name, money(Math.round(z.sales))]) }}><BarList items={zoneRows.map((z) => ({ label: z.zone.name, value: z.sales, display: money(Math.round(z.sales), { compact: true }) }))} /></ChartCard>
             <ReportTable csv="zones" rows={zoneRows} cols={[{ label: 'المنطقة', value: (r) => r.zone.name }, { label: 'الطلبات', num: true, value: (r) => r.orders }, { label: 'المبيعات', num: true, value: (r) => r.sales, cell: (r) => money(r.sales) }, { label: 'الحصة', num: true, value: (r) => +((r.sales / Math.max(totalSales, 1)) * 100).toFixed(1), cell: (r) => fmtPct((r.sales / Math.max(totalSales, 1)) * 100) }, { label: 'الديون', num: true, value: (r) => r.debt, cell: (r) => money(r.debt) }]} />
           </>
         )}
@@ -192,7 +192,7 @@ export default function Reports() {
               <Stat label="المتأخر" value={debtTotals.overdue} format={(n) => money(n, { compact: true })} color="#e5385f" />
               <Stat label="عملاء مدينون" value={debtRows.length} format={(n) => fmtNum(Math.round(n))} color="#f5b50a" />
             </div>
-            <motion.div variants={rise} className="card"><div className="card-head"><h3>أعمار الديون</h3></div><div className="card-body"><div className="aging-wrap"><Donut size={190} stroke={26} segments={AGING_BUCKETS.map((b) => ({ label: b.label, value: debtTotals[b.key], color: b.color }))}><b style={{ fontSize: '1.2rem' }}>{money(debtTotals.total, { compact: true })}</b></Donut><div className="legend">{AGING_BUCKETS.map((b) => <div key={b.key} className="legend-row"><i style={{ background: b.color }} />{b.label}<b className="num">{money(debtTotals[b.key], { compact: true })}</b></div>)}</div></div></div></motion.div>
+            <ChartCard title="أعمار الديون" table={{ head: ['الشريحة', 'المبلغ'], rows: AGING_BUCKETS.map((b) => [b.label, money(Math.round(debtTotals[b.key]))]) }}><AgingBreakdown aging={debtTotals} money={money} /></ChartCard>
             <ReportTable csv="debts" rows={debtRows} cols={[{ label: 'العميل', value: (r) => r.c.name }, { label: 'المندوب', value: (r) => repById.get(r.c.repId)?.name }, { label: 'الرصيد', num: true, value: (r) => r.c.balance, cell: (r) => <b>{money(r.c.balance)}</b> }, ...AGING_BUCKETS.map((b) => ({ label: b.label, num: true, value: (r: { c: unknown; a: ReturnType<typeof sumAging> }) => Math.round(r.a[b.key]), cell: (r: { c: unknown; a: ReturnType<typeof sumAging> }) => (r.a[b.key] > 0.005 ? money(r.a[b.key], { compact: true }) : '—') }))]} />
           </>
         )}
@@ -203,7 +203,7 @@ export default function Reports() {
               <Stat label="عدد السندات" value={cols.length} format={(n) => fmtNum(Math.round(n))} color="#6d4aff" />
               <Stat label="نسبة التحصيل من المبيعات" value={totalSales ? (totalCols / totalSales) * 100 : 0} format={(n) => fmtPct(n)} color="#00b8a9" />
             </div>
-            <motion.div variants={rise} className="card"><div className="card-head"><h3>التحصيل اليومي</h3></div><div className="card-body"><AreaChart animKey={`${period}-c`} labels={series.labels} series={[{ label: 'التحصيل', color: '#12b76a', values: series.cols }]} format={fmtCompact} /></div></motion.div>
+            <ChartCard title="التحصيل اليومي" table={{ head: ['اليوم', 'التحصيل'], rows: series.labels.map((l, i) => [l, money(Math.round(series.cols[i] ?? 0))]).reverse() }}><AreaChart animKey={`${period}-c`} labels={series.labels} ariaLabel="التحصيل اليومي" series={[{ key: 'cols', label: 'التحصيل', color: 'var(--chart-2)', values: series.cols }]} format={fmtCompact} /></ChartCard>
             <ReportTable csv="collections-methods" rows={methodRows} cols={[{ label: 'طريقة الدفع', value: (r) => PAYMENT_METHOD_LABELS[r.m] }, { label: 'المبلغ', num: true, value: (r) => r.v, cell: (r) => money(r.v) }, { label: 'الحصة', num: true, value: (r) => +((r.v / Math.max(totalCols, 1)) * 100).toFixed(1), cell: (r) => fmtPct((r.v / Math.max(totalCols, 1)) * 100) }]} />
             <ReportTable csv="collections-reps" rows={repRows.filter((r) => r.cols > 0)} cols={[{ label: 'المندوب', value: (r) => r.rep.name }, { label: 'المحصّل', num: true, value: (r) => r.cols, cell: (r) => money(r.cols) }, { label: 'الهدف الشهري', num: true, value: (r) => r.rep.collectionTarget, cell: (r) => money(r.rep.collectionTarget, { compact: true }) }]} />
           </>

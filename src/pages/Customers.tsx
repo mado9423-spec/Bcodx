@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, MessageCircle, MapPinned, Pencil, Phone, Plus, ShoppingCart, UserRound, Wallet } from 'lucide-react';
+import { BookText, MapPin, MapPinned, MessageCircle, Pencil, Phone, Plus, Receipt, SearchX, ShoppingCart, UserRound, Wallet } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { CollectModal } from '../components/forms/CollectModal';
 import { CustomerForm } from '../components/forms/CustomerForm';
@@ -172,7 +172,7 @@ function CustomerDrawer({ customer, onClose }: { customer: Customer | undefined;
               ]}
             />
             {tab === 'ledger' && (
-              data.ledger.length === 0 ? <EmptyState icon="📒" title="لا حركات بعد" /> : (
+              data.ledger.length === 0 ? <EmptyState icon={<BookText size={34} />} title="لا حركات بعد" /> : (
                 <div className="table-wrap">
                   <table className="table">
                     <thead><tr><th>البيان</th><th className="num">مدين</th><th className="num">دائن</th><th className="num">الرصيد</th></tr></thead>
@@ -191,7 +191,7 @@ function CustomerDrawer({ customer, onClose }: { customer: Customer | undefined;
               )
             )}
             {tab === 'orders' && (
-              data.myOrders.length === 0 ? <EmptyState icon="🧾" title="لا طلبات" /> : (
+              data.myOrders.length === 0 ? <EmptyState icon={<Receipt size={34} />} title="لا طلبات" /> : (
                 <div className="col" style={{ gap: '0.5rem' }}>
                   {data.myOrders.slice(0, 30).map((o) => (
                     <Link key={o.id} to={`/orders?open=${o.id}`} className="mini-row" style={{ border: '1px solid var(--border)' }}>
@@ -204,14 +204,14 @@ function CustomerDrawer({ customer, onClose }: { customer: Customer | undefined;
               )
             )}
             {tab === 'visits' && (
-              data.myVisits.length === 0 ? <EmptyState icon="📍" title="لا زيارات مسجلة" /> : (
+              data.myVisits.length === 0 ? <EmptyState icon={<MapPin size={34} />} title="لا زيارات مسجلة" /> : (
                 <ul className="timeline">
                   {data.myVisits.slice(0, 30).map((v) => (
                     <li key={v.id}>
                       <span className="tl-dot blue"><MapPinned size={16} /></span>
                       <div className="grow">
                         <b style={{ fontSize: '0.875rem' }}>{VISIT_RESULT_LABELS[v.result]}</b>
-                        <div className="muted xs">{v.repName} • {fmtDateTime(v.createdAt)}{v.lat ? ' • 📍 مع الموقع' : ''}</div>
+                        <div className="muted xs">{v.repName} • {fmtDateTime(v.createdAt)}{v.lat ? ' • مع الموقع' : ''}</div>
                         {v.note && <div className="small">{v.note}</div>}
                       </div>
                     </li>
@@ -233,7 +233,7 @@ export default function Customers() {
   const { customers, zones, reps, aging, money, customerById } = useData();
   const { profile } = useAuth();
   const [params, setParams] = useSearchParams();
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState(params.get('q') ?? '');
   const [zone, setZone] = useState('all');
   const [rep, setRep] = useState('all');
   const [sort, setSort] = useState<'name' | 'debt' | 'recent'>('name');
@@ -243,6 +243,17 @@ export default function Customers() {
   const [status, setStatus] = useState<StatusFilter>(['debt', 'overdue', 'exceeded', 'unvisited', 'inactive'].includes(filterParam ?? '') ? (filterParam as StatusFilter) : 'all');
   const openId = params.get('open');
   const opened = openId ? customerById.get(openId) : undefined;
+
+  // ‎?new=1 من لوحة الأوامر يفتح نموذج العميل الجديد
+  useEffect(() => {
+    if (params.get('new') && can(role, 'customers.edit')) {
+      setCreating(true);
+      const next = new URLSearchParams(params);
+      next.delete('new');
+      setParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const counts = useMemo(() => {
     const now = Date.now();
@@ -327,7 +338,7 @@ export default function Customers() {
         />
       </div>
       {list.length === 0 ? (
-        <div className="card"><EmptyState icon="🔍" title="لا عملاء مطابقون" text="جرّب تغيير الفلاتر أو البحث." /></div>
+        <div className="card"><EmptyState icon={<SearchX size={34} />} title="لا عملاء مطابقون" text="جرّب تغيير الفلاتر أو البحث." /></div>
       ) : (
         <motion.div className="cust-grid" variants={stagger} initial="hidden" animate="show" key={`${status}-${zone}-${rep}-${sort}-${q}`}>
           {list.slice(0, 120).map((c) => <CustomerCard key={c.id} c={c} onOpen={() => setOpen(c.id)} />)}

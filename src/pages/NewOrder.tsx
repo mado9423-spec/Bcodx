@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Gift, Send, ShieldAlert, ShoppingCart, Sparkles, Trash2 } from 'lucide-react';
+import { ArrowRight, Banknote, Clock, Gift, Lightbulb, Send, ShieldAlert, ShoppingCart, Sparkles, Target, Trash2 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { CustomerPicker } from '../components/forms/CustomerPicker';
 import { Badge } from '../components/ui/Badge';
@@ -262,7 +262,7 @@ export default function NewOrder() {
               <AnimatePresence initial={false}>
                 {lines.length === 0 && (
                   <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="empty" style={{ padding: '1.4rem 0.5rem' }}>
-                    <span style={{ fontSize: '2rem' }}>🛒</span>
+                    <ShoppingCart size={34} color="var(--brand)" />
                     <b>السلة فارغة</b>
                     <span className="small">اضغط «أضف» على أي صنف.</span>
                   </motion.div>
@@ -278,7 +278,7 @@ export default function NewOrder() {
                         <b className="truncate" style={{ display: 'block', fontSize: '0.875rem' }}>{l.product.name}</b>
                         <span className="muted xs">{money(pl?.price ?? 0)} × {l.qty}</span>
                         {pl?.offerName && <div className="xs offer-line"><Sparkles size={11} /> {pl.freeQty > 0 ? `+${pl.freeQty} مجانًا` : `وفّرت ${money(pl.discount)}`}</div>}
-                        {!pl?.offerName && hint && <div className="xs hint-line">💡 {hint}</div>}
+                        {!pl?.offerName && hint && <div className="xs hint-line row" style={{ gap: 4 }}><Lightbulb size={12} /> {hint}</div>}
                         {bad && <div className="xs" style={{ color: 'var(--bad)', fontWeight: 700 }}>المتاح {fmtNum(stockQty(warehouseId, l.product.id))} فقط</div>}
                       </div>
                       <div className="cl-end">
@@ -293,7 +293,7 @@ export default function NewOrder() {
 
             {hintOrder && (
               <div className="upsell">
-                <div className="small"><b>🎯 أضف {money(hintOrder.minTotal - afterLines)}</b> للحصول على خصم {hintOrder.percent}% على الفاتورة</div>
+                <div className="small row" style={{ gap: 6 }}><Target size={15} /><span><b>أضف {money(hintOrder.minTotal - afterLines)}</b> للحصول على خصم {hintOrder.percent}% على الفاتورة</span></div>
                 <Progress value={afterLines} max={hintOrder.minTotal} size="thin" c1="#f5b50a" c2="#ff9a3c" />
               </div>
             )}
@@ -314,8 +314,8 @@ export default function NewOrder() {
                   value={paymentType}
                   onChange={setPaymentType}
                   options={[
-                    { value: 'credit', label: '🕒 آجل' },
-                    { value: 'cash', label: '💵 نقدي' },
+                    { value: 'credit', label: <><Clock size={15} /> آجل</> },
+                    { value: 'cash', label: <><Banknote size={15} /> نقدي</> },
                   ]}
                 />
               )}

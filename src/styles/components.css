@@ -494,7 +494,8 @@
 /* ============ Progress ============ */
 .progress {
   height: 8px;
-  background: var(--surface-3);
+  /* المسار درجة أفتح من لون التعبئة نفسه فتُقرأ الحالة على كامل الشريط */
+  background: color-mix(in srgb, var(--_c1, var(--brand)) 16%, var(--surface));
   border-radius: 999px;
   overflow: hidden;
 }
@@ -502,7 +503,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--_c1, #8468ff), var(--_c2, #5b39f0));
+  background: var(--_c1, var(--brand));
 }
 .progress.thin {
   height: 6px;
@@ -730,6 +731,7 @@
 .table td.num,
 .table th.num {
   text-align: end;
+  white-space: nowrap;
 }
 
 /* ============ Empty / skeleton ============ */

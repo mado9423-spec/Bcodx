@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
+import { Inbox } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from './Button';
 
-export function EmptyState({ icon = '📭', title, text, action }: { icon?: ReactNode; title: string; text?: ReactNode; action?: { label: string; onClick: () => void } }) {
+export function EmptyState({ icon = <Inbox size={34} />, title, text, action }: { icon?: ReactNode; title: string; text?: ReactNode; action?: { label: string; onClick: () => void } }) {
   return (
     <div className="empty">
       <motion.div className="ill" initial={{ scale: 0.6, rotate: -8, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>

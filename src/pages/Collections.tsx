@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Banknote, CalendarClock, MessageCircle, Plus, Target, TriangleAlert, Wallet, Undo2, Download } from 'lucide-react';
+import { Banknote, CalendarClock, Download, MessageCircle, PartyPopper, Plus, Target, TriangleAlert, Undo2, Wallet } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { CollectModal } from '../components/forms/CollectModal';
 import { HealthBadge } from '../components/status';
 import { Avatar, Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import { Donut, Ring, StackBar } from '../components/ui/Charts';
+import { AgingBreakdown, Ring, StackBar } from '../components/ui/Charts';
 import { CountUp } from '../components/ui/CountUp';
 import { Field, NumInput, SearchInput, Segmented, Tabs, TextInput } from '../components/ui/Fields';
 import { ConfirmDialog, Modal } from '../components/ui/Modal';
@@ -95,7 +95,6 @@ export default function Collections() {
   }, [data.debtors, q, filter, aging]);
 
   const log = useMemo(() => [...collections].sort((a, b) => b.createdAt - a.createdAt), [collections]);
-  const agSeg = AGING_BUCKETS.map((b) => ({ label: b.label, value: data.ag[b.key], color: b.color }));
   const collectPct = data.target > 0 ? (data.monthCollected / data.target) * 100 : 0;
 
   const exportCsv = () =>
@@ -122,21 +121,10 @@ export default function Collections() {
 
       <motion.div className="coll-top" variants={stagger} initial="hidden" animate="show">
         <motion.div variants={rise} className="card pad coll-hero">
-          <div className="row" style={{ gap: '1.4rem', flexWrap: 'wrap' }}>
-            <Donut segments={agSeg} size={150} stroke={20}>
-              <div className="muted xs">إجمالي الديون</div>
-              <b style={{ fontSize: '1.05rem' }}><CountUp value={data.ag.total} format={(n) => money(n, { compact: true })} /></b>
-            </Donut>
-            <div className="grow" style={{ minWidth: 220 }}>
-              <div className="legend">
-                {agSeg.map((s) => <div key={s.label} className="legend-row"><i style={{ background: s.color }} />{s.label}<b className="num">{money(s.value, { compact: true })}</b></div>)}
-              </div>
-              <div style={{ marginTop: '0.8rem' }}><StackBar segments={agSeg} /></div>
-            </div>
-          </div>
+          <AgingBreakdown aging={data.ag} money={money} />
         </motion.div>
         <motion.div variants={rise} className="card pad coll-target">
-          <Ring value={data.monthCollected} max={Math.max(data.target, 1)} size={120} stroke={12} color="#12b76a" color2="#6ee7b7">
+          <Ring value={data.monthCollected} max={Math.max(data.target, 1)} size={120} stroke={12} color="var(--chart-2)">
             <b style={{ fontSize: '1.4rem' }}><CountUp value={collectPct} format={(n) => `${fmtNum(Math.round(n))}%`} /></b>
           </Ring>
           <div>
@@ -176,7 +164,7 @@ export default function Collections() {
             />
           </div>
           {list.length === 0 ? (
-            <div className="card"><EmptyState icon="🎉" title="لا مستحقات ضمن هذا الفلتر" text="كل العملاء مسدِّدون." /></div>
+            <div className="card"><EmptyState icon={<PartyPopper size={34} />} title="لا مستحقات ضمن هذا الفلتر" text="كل العملاء مسدِّدون." /></div>
           ) : (
             <motion.div className="due-list" variants={stagger} initial="hidden" animate="show" key={filter + q}>
               {list.slice(0, 80).map((c) => {
@@ -216,19 +204,19 @@ export default function Collections() {
         </>
       ) : (
         <div className="card">
-          {log.length === 0 ? <EmptyState icon="💰" title="لا سندات قبض" /> : (
+          {log.length === 0 ? <EmptyState icon={<Wallet size={34} />} title="لا سندات قبض" /> : (
             <div className="table-wrap">
-              <table className="table">
+              <table className="table stack stack-log">
                 <thead><tr><th>العميل</th><th className="hide-mobile">المندوب</th><th>الطريقة</th><th className="num">المبلغ</th><th>التاريخ</th>{can(role, 'collections.void') && <th />}</tr></thead>
                 <tbody>
                   {log.slice(0, 150).map((c) => (
                     <tr key={c.id} style={{ opacity: c.status === 'void' ? 0.5 : 1 }}>
-                      <td><b>{c.customerName}</b>{c.orderId && <div className="muted xs">دفعة مع طلب</div>}{c.reference && <div className="muted xs ltr">{c.reference}</div>}</td>
+                      <td data-area="a"><b>{c.customerName}</b>{c.orderId && <div className="muted xs">دفعة مع طلب</div>}{c.reference && <div className="muted xs ltr">{c.reference}</div>}</td>
                       <td className="hide-mobile">{c.repName}</td>
-                      <td><Badge tone={c.method === 'cash' ? 'green' : c.method === 'transfer' ? 'blue' : 'violet'}>{PAYMENT_METHOD_LABELS[c.method]}</Badge></td>
-                      <td className="num bold" style={{ textDecoration: c.status === 'void' ? 'line-through' : undefined }}>{money(c.amount)}</td>
-                      <td><div className="small">{fmtDateTime(c.createdAt)}</div><div className="muted xs">{fmtAgo(c.createdAt)}</div></td>
-                      {can(role, 'collections.void') && <td>{c.status === 'void' ? <Badge tone="red">ملغى</Badge> : <Button size="sm" variant="ghost" leading={<Undo2 size={14} />} onClick={() => setVoiding(c)}>إلغاء</Button>}</td>}
+                      <td data-area="c"><Badge tone={c.method === 'cash' ? 'green' : c.method === 'transfer' ? 'blue' : 'violet'}>{PAYMENT_METHOD_LABELS[c.method]}</Badge></td>
+                      <td className="num bold" data-area="b" style={{ textDecoration: c.status === 'void' ? 'line-through' : undefined }}>{money(c.amount)}</td>
+                      <td data-area="d"><div className="small">{fmtDateTime(c.createdAt)}</div><div className="muted xs">{fmtAgo(c.createdAt)}</div></td>
+                      {can(role, 'collections.void') && <td data-area="e">{c.status === 'void' ? <Badge tone="red">ملغى</Badge> : <Button size="sm" variant="ghost" leading={<Undo2 size={14} />} onClick={() => setVoiding(c)}>إلغاء</Button>}</td>}
                     </tr>
                   ))}
                 </tbody>

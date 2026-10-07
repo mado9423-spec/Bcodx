@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Gift, Plus } from 'lucide-react';
+import { Gift, Package, Plus } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { ProductForm } from '../components/forms/ProductForm';
 import { Badge } from '../components/ui/Badge';
@@ -17,7 +18,8 @@ import { isOfferLive } from '../lib/pricing';
 export default function Products() {
   const { products, stockTotal, offers, money } = useData();
   const { profile } = useAuth();
-  const [q, setQ] = useState('');
+  const [params] = useSearchParams();
+  const [q, setQ] = useState(params.get('q') ?? '');
   const [cat, setCat] = useState('all');
   const [editing, setEditing] = useState<Product | undefined>();
   const [creating, setCreating] = useState(false);
@@ -43,7 +45,7 @@ export default function Products() {
         {categories.map((c) => <button key={c} className="chip" aria-pressed={cat === c} onClick={() => setCat(c)}>{c} ({products.filter((p) => p.category === c).length})</button>)}
       </div>
       {list.length === 0 ? (
-        <div className="card"><EmptyState icon="📦" title="لا منتجات" text="أضف أول منتج لبدء البيع." action={canEdit ? { label: 'منتج جديد', onClick: () => setCreating(true) } : undefined} /></div>
+        <div className="card"><EmptyState icon={<Package size={34} />} title="لا منتجات" text="أضف أول منتج لبدء البيع." action={canEdit ? { label: 'منتج جديد', onClick: () => setCreating(true) } : undefined} /></div>
       ) : (
         <motion.div className="prod-grid" variants={stagger} initial="hidden" animate="show" key={`${cat}-${q}`}>
           {list.map((p) => {

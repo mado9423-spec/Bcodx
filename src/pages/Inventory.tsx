@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeftRight, Boxes, ClipboardCheck, PackagePlus, Plus, Truck } from 'lucide-react';
+import { ArrowLeftRight, Boxes, CheckCircle2, ClipboardCheck, Factory, History, PackagePlus, Plus, Truck, Warehouse as WarehouseIcon } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { AdjustModal, ReceiveModal, TransferModal, WarehouseModal } from '../components/forms/StockModals';
 import { Badge } from '../components/ui/Badge';
@@ -87,12 +87,12 @@ export default function Inventory() {
           </div>
           <div className="chips" style={{ marginBottom: '1rem' }}>
             <button className="chip" aria-pressed={wh === 'all'} onClick={() => setWh('all')}>كل المخازن</button>
-            {warehouses.map((w) => <button key={w.id} className="chip" aria-pressed={wh === w.id} onClick={() => setWh(w.id)}>{w.type === 'van' ? '🚚' : '🏬'} {w.name}</button>)}
+            {warehouses.map((w) => <button key={w.id} className="chip" aria-pressed={wh === w.id} onClick={() => setWh(w.id)}><span className="row" style={{ gap: 6 }}>{w.type === 'van' ? <Truck size={14} /> : <WarehouseIcon size={14} />} {w.name}</span></button>)}
           </div>
           <div className="card">
-            {list.length === 0 ? <EmptyState icon="✅" title="لا أصناف ضمن هذا الفلتر" /> : (
+            {list.length === 0 ? <EmptyState icon={<CheckCircle2 size={34} />} title="لا أصناف ضمن هذا الفلتر" /> : (
               <div className="table-wrap">
-                <table className="table">
+                <table className="table stack stack-stock">
                   <thead><tr><th>الصنف</th><th className="num">الكمية</th><th className="hide-mobile">مستوى المخزون</th><th className="hide-mobile num">القيمة</th><th>الحالة</th>{canEdit && selectedWh && <th />}</tr></thead>
                   <tbody>
                     {list.map((p) => {
@@ -101,12 +101,12 @@ export default function Inventory() {
                       const low = !out && n <= p.minStock;
                       return (
                         <tr key={p.id}>
-                          <td><span className="row" style={{ gap: 10 }}><span style={{ fontSize: '1.5rem' }}>{p.emoji}</span><span><b>{p.name}</b><div className="muted xs">{p.category} • حد الطلب {fmtNum(p.minStock)}</div></span></span></td>
-                          <td className="num bold">{fmtNum(n)} <span className="muted xs">{p.unit}</span></td>
+                          <td data-area="a"><span className="row" style={{ gap: 10 }}><span style={{ fontSize: '1.5rem' }}>{p.emoji}</span><span><b>{p.name}</b><div className="muted xs">{p.category} • حد الطلب {fmtNum(p.minStock)}</div></span></span></td>
+                          <td className="num bold" data-area="b">{fmtNum(n)} <span className="muted xs">{p.unit}</span></td>
                           <td className="hide-mobile" style={{ minWidth: 160 }}><Progress value={n} max={Math.max(p.minStock * 3, 1)} size="thin" c1={out ? '#e5385f' : low ? '#f5b50a' : '#00b8a9'} c2={out ? '#ff6b5b' : low ? '#ff9a3c' : '#5eead4'} /></td>
                           <td className="hide-mobile num">{money(n * p.cost, { compact: true })}</td>
-                          <td>{out ? <Badge tone="red" dot>نافد</Badge> : low ? <Badge tone="amber" dot>منخفض</Badge> : <Badge tone="green" dot>جيد</Badge>}</td>
-                          {canEdit && selectedWh && <td><Button size="sm" variant="ghost" onClick={() => setAdjust({ w: selectedWh, p })}>تسوية</Button></td>}
+                          <td data-area="c">{out ? <Badge tone="red" dot>نافد</Badge> : low ? <Badge tone="amber" dot>منخفض</Badge> : <Badge tone="green" dot>جيد</Badge>}</td>
+                          {canEdit && selectedWh && <td data-area="d"><Button size="sm" variant="ghost" onClick={() => setAdjust({ w: selectedWh, p })}>تسوية</Button></td>}
                         </tr>
                       );
                     })}
@@ -123,7 +123,7 @@ export default function Inventory() {
                 const value = items.reduce((s, i) => s + i.qty * (productById.get(i.productId)?.cost ?? 0), 0);
                 return (
                   <motion.button key={w.id} className="card hover wh-card" onClick={() => setWh(w.id)} whileTap={{ scale: 0.98 }}>
-                    <span className="wh-ico">{w.type === 'van' ? '🚚' : w.type === 'main' ? '🏭' : '🏬'}</span>
+                    <span className="wh-ico">{w.type === 'van' ? <Truck size={22} /> : w.type === 'main' ? <Factory size={22} /> : <WarehouseIcon size={22} />}</span>
                     <b>{w.name}</b>
                     <span className="muted xs">{WAREHOUSE_TYPE_LABELS[w.type]}{w.repId ? ` • ${repById.get(w.repId)?.name ?? ''}` : ''}</span>
                     <div className="row between small"><span>{fmtNum(units)} وحدة</span><b>{money(value, { compact: true })}</b></div>
@@ -135,7 +135,7 @@ export default function Inventory() {
         </>
       ) : (
         <div className="card">
-          {movements.length === 0 ? <EmptyState icon="📜" title="لا حركات" /> : (
+          {movements.length === 0 ? <EmptyState icon={<History size={34} />} title="لا حركات" /> : (
             <div className="table-wrap">
               <table className="table">
                 <thead><tr><th>الصنف</th><th>المخزن</th><th>النوع</th><th className="num">الكمية</th><th className="hide-mobile">بواسطة</th><th>الوقت</th></tr></thead>

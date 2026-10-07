@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Ban, Check, ChevronLeft, Download, MessageCircle, Plus, Printer, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { Ban, Check, ChevronLeft, Download, Gift, MessageCircle, Plus, Printer, Receipt, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { OrderStatusBadge } from '../components/status';
 import { Avatar, Badge } from '../components/ui/Badge';
@@ -116,7 +116,7 @@ function OrderDrawer({ order, onClose }: { order: Order | undefined; onClose: ()
                           <span style={{ fontSize: '1.4rem' }}>{it.emoji}</span>
                           <span>
                             <b>{it.name}</b>
-                            {it.offerName && <div className="xs" style={{ color: 'var(--c-teal)', fontWeight: 700 }}>🎁 {it.offerName}</div>}
+                            {it.offerName && <div className="xs row" style={{ color: 'var(--chart-2)', fontWeight: 700, gap: 4 }}><Gift size={12} /> {it.offerName}</div>}
                           </span>
                         </span>
                       </td>
@@ -276,10 +276,10 @@ export default function Orders() {
       </div>
       <div className="card">
         {list.length === 0 ? (
-          <EmptyState icon="🧾" title="لا طلبات مطابقة" text="غيّر الفلاتر أو أنشئ طلبًا جديدًا." action={can(role, 'orders.create') ? { label: 'طلب جديد', onClick: () => nav('/orders/new') } : undefined} />
+          <EmptyState icon={<Receipt size={34} />} title="لا طلبات مطابقة" text="غيّر الفلاتر أو أنشئ طلبًا جديدًا." action={can(role, 'orders.create') ? { label: 'طلب جديد', onClick: () => nav('/orders/new') } : undefined} />
         ) : (
           <div className="table-wrap">
-            <table className="table">
+            <table className="table stack stack-orders">
               <thead>
                 <tr>
                   <th>الطلب</th><th>العميل</th><th className="hide-mobile">المندوب</th><th className="hide-mobile num">الأصناف</th><th className="num">الإجمالي</th><th className="hide-mobile">الدفع</th><th>الحالة</th>
@@ -288,13 +288,13 @@ export default function Orders() {
               <tbody>
                 {list.slice(0, 200).map((o) => (
                   <tr key={o.id} className="click" onClick={() => setOpen(o.id)} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setOpen(o.id)}>
-                    <td><b className="ltr">#{o.no}</b><div className="muted xs">{fmtAgo(o.createdAt)}</div></td>
-                    <td><b>{o.customerName}</b></td>
+                    <td data-area="c"><b className="ltr">#{o.no}</b><div className="muted xs">{fmtAgo(o.createdAt)}</div></td>
+                    <td data-area="a"><b>{o.customerName}</b></td>
                     <td className="hide-mobile">{o.repName}</td>
                     <td className="hide-mobile num">{o.items.length}</td>
-                    <td className="num bold">{money(o.total)}</td>
+                    <td className="num bold" data-area="b">{money(o.total)}</td>
                     <td className="hide-mobile">{o.paymentType === 'cash' ? <Badge tone="green">نقدي</Badge> : o.paidNow > 0 ? <Badge tone="amber">جزئي</Badge> : <Badge tone="orange">آجل</Badge>}</td>
-                    <td><OrderStatusBadge status={o.status} /></td>
+                    <td data-area="d"><OrderStatusBadge status={o.status} /></td>
                   </tr>
                 ))}
               </tbody>

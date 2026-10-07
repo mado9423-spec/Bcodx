@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, MessageCircle, Pencil, Phone, Plus } from 'lucide-react';
+import { Crown, MessageCircle, Pencil, Phone, Plus, Truck } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { Avatar, Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -103,13 +103,13 @@ export default function Reps() {
                 <Avatar name={s!.rep.name} color={s!.rep.color} size={place === 1 ? 'xl' : 'lg'} round />
                 <b>{s!.rep.name}</b>
                 <span className="num muted small">{money(s!.sales, { compact: true })}</span>
-                <div className="podium-bar" style={{ height: place === 1 ? 84 : place === 2 ? 60 : 44 }}>{place === 1 ? '🥇' : place === 2 ? '🥈' : '🥉'}</div>
+                <div className="podium-bar" style={{ height: place === 1 ? 84 : place === 2 ? 60 : 44 }}>{place}</div>
               </motion.div>
             );
           })}
         </motion.div>
       )}
-      {reps.length === 0 ? <div className="card"><EmptyState icon="🚚" title="لا مندوبين بعد" text="أضف مندوبيك لتتبع أدائهم وأهدافهم." action={canEdit ? { label: 'مندوب جديد', onClick: () => setCreating(true) } : undefined} /></div> : (
+      {reps.length === 0 ? <div className="card"><EmptyState icon={<Truck size={34} />} title="لا مندوبين بعد" text="أضف مندوبيك لتتبع أدائهم وأهدافهم." action={canEdit ? { label: 'مندوب جديد', onClick: () => setCreating(true) } : undefined} /></div> : (
         <motion.div className="rep-grid" variants={stagger} initial="hidden" animate="show">
           {stats.map((s) => (
             <motion.article key={s.rep.id} variants={rise} className="card rep-card" style={{ opacity: s.rep.active ? 1 : 0.55, ['--rc' as string]: s.rep.color }}>
@@ -127,14 +127,14 @@ export default function Reps() {
               </div>
               <div className="rep-rings">
                 <div className="rep-ring">
-                  <Ring value={s.sales} max={s.rep.salesTarget} size={96} stroke={9} color={s.rep.color} color2="#00b8a9">
+                  <Ring value={s.sales} max={s.rep.salesTarget} size={96} stroke={9} color="var(--chart-1)">
                     <b style={{ fontSize: '1rem' }}><CountUp value={(s.sales / Math.max(s.rep.salesTarget, 1)) * 100} format={(n) => `${fmtNum(Math.round(n))}%`} /></b>
                   </Ring>
                   <span className="small bold">المبيعات</span>
                   <span className="muted xs">{money(s.sales, { compact: true })} / {money(s.rep.salesTarget, { compact: true })}</span>
                 </div>
                 <div className="rep-ring">
-                  <Ring value={s.cols} max={s.rep.collectionTarget} size={96} stroke={9} color="#12b76a" color2="#6ee7b7">
+                  <Ring value={s.cols} max={s.rep.collectionTarget} size={96} stroke={9} color="var(--chart-2)">
                     <b style={{ fontSize: '1rem' }}><CountUp value={(s.cols / Math.max(s.rep.collectionTarget, 1)) * 100} format={(n) => `${fmtNum(Math.round(n))}%`} /></b>
                   </Ring>
                   <span className="small bold">التحصيل</span>

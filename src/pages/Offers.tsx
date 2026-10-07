@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { BadgePercent, Gift, Pencil, Percent, Plus, Receipt, Trash2 } from 'lucide-react';
+import { BadgePercent, Gift, Pencil, Percent, Plus, Receipt, Target, Trash2 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -55,7 +55,7 @@ function OfferForm({ open, onClose, offer }: { open: boolean; onClose: () => voi
     setTouched(true);
     if (!valid) return;
     const payload: Offer = { ...o, name: o.name.trim(), productIds: itemOffer && scope === 'products' ? o.productIds : [], category: itemOffer && scope === 'category' ? o.category : '' };
-    const ok = await run(async () => { await actions.saveOffer(payload); return true; }, offer ? 'تم تحديث العرض' : 'تم إنشاء العرض 🎁');
+    const ok = await run(async () => { await actions.saveOffer(payload); return true; }, offer ? 'تم تحديث العرض' : 'تم إنشاء العرض');
     if (ok) onClose();
   };
 
@@ -166,7 +166,7 @@ export default function Offers() {
   return (
     <>
       <PageHeader title="العروض والخصومات" subtitle={`${fmtNum(activeCount)} عرض فعّال الآن — تُطبَّق تلقائيًا في الطلبات`} actions={canEdit && <Button variant="primary" leading={<Plus size={18} />} onClick={() => setCreating(true)}>عرض جديد</Button>} />
-      {offers.length === 0 ? <div className="card"><EmptyState icon="🎁" title="لا عروض بعد" text="أنشئ عرضًا لزيادة المبيعات وتحفيز العملاء على الشراء بكميات أكبر." action={canEdit ? { label: 'عرض جديد', onClick: () => setCreating(true) } : undefined} /></div> : (
+      {offers.length === 0 ? <div className="card"><EmptyState icon={<Gift size={34} />} title="لا عروض بعد" text="أنشئ عرضًا لزيادة المبيعات وتحفيز العملاء على الشراء بكميات أكبر." action={canEdit ? { label: 'عرض جديد', onClick: () => setCreating(true) } : undefined} /></div> : (
         <motion.div className="offer-grid" variants={stagger} initial="hidden" animate="show">
           {sorted.map((o) => {
             const st = offerStatus(o, now);
@@ -188,7 +188,7 @@ export default function Offers() {
                   <Badge tone={meta.tone} dot pulse={st === 'active'}>{meta.label}</Badge>
                 </div>
                 <div className="offer-desc">{describeOffer(o, money)}</div>
-                <div className="muted xs truncate" title={scopeLabel}>🎯 {scopeLabel}</div>
+                <div className="muted xs row" style={{ gap: 6 }} title={scopeLabel}><Target size={13} /><span className="truncate">{scopeLabel}</span></div>
                 <div>
                   <div className="row between xs"><span className="muted">{fmtDate(o.startAt)} ← {fmtDate(o.endAt)}</span><b>{st === 'active' ? `باقي ${fmtNum(Math.max(left, 0))} يوم` : st === 'scheduled' ? `يبدأ بعد ${fmtNum(Math.ceil((o.startAt - now) / DAY))} يوم` : ''}</b></div>
                   <Progress value={elapsed} max={total} size="thin" c1={TYPE_COLOR[o.type]} c2={TYPE_COLOR[o.type]} />

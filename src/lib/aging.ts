@@ -13,11 +13,11 @@ export interface Aging {
 }
 
 export const AGING_BUCKETS: { key: keyof Pick<Aging, 'current' | 'd1_30' | 'd31_60' | 'd61_90' | 'd90p'>; label: string; color: string }[] = [
-  { key: 'current', label: 'غير مستحق', color: 'var(--c-teal)' },
-  { key: 'd1_30', label: '1–30 يومًا', color: 'var(--c-amber)' },
-  { key: 'd31_60', label: '31–60 يومًا', color: 'var(--c-orange)' },
-  { key: 'd61_90', label: '61–90 يومًا', color: 'var(--c-coral)' },
-  { key: 'd90p', label: 'أكثر من 90', color: 'var(--c-rose)' },
+  { key: 'current', label: 'غير مستحق', color: 'var(--age-0)' },
+  { key: 'd1_30', label: 'متأخر 1–30 يومًا', color: 'var(--age-1)' },
+  { key: 'd31_60', label: 'متأخر 31–60 يومًا', color: 'var(--age-2)' },
+  { key: 'd61_90', label: 'متأخر 61–90 يومًا', color: 'var(--age-3)' },
+  { key: 'd90p', label: 'متأخر أكثر من 90', color: 'var(--age-4)' },
 ];
 
 export const emptyAging = (): Aging => ({ current: 0, d1_30: 0, d31_60: 0, d61_90: 0, d90p: 0, total: 0, overdue: 0, oldestOverdueDays: 0 });

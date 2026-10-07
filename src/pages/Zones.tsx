@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Pencil, Plus } from 'lucide-react';
+import { Map, MapPin, Pencil, Plus } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { Avatar, Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -69,7 +69,7 @@ export default function Zones() {
   return (
     <>
       <PageHeader title="مناطق التوزيع" subtitle="أداء كل منطقة: المبيعات، الديون، وتغطية الزيارات" actions={canEdit && <Button variant="primary" leading={<Plus size={18} />} onClick={() => setCreating(true)}>منطقة جديدة</Button>} />
-      {zones.length === 0 ? <div className="card"><EmptyState icon="🗺️" title="لا مناطق بعد" action={canEdit ? { label: 'منطقة جديدة', onClick: () => setCreating(true) } : undefined} /></div> : (
+      {zones.length === 0 ? <div className="card"><EmptyState icon={<Map size={34} />} title="لا مناطق بعد" action={canEdit ? { label: 'منطقة جديدة', onClick: () => setCreating(true) } : undefined} /></div> : (
         <>
           <div className="card pad bubbles-card">
             <div className="muted small bold" style={{ marginBottom: 8 }}>خريطة حجم المبيعات (الشهر الحالي)</div>

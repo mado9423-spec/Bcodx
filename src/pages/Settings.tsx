@@ -209,7 +209,7 @@ export default function SettingsPage() {
   return (
     <>
       <PageHeader title="الإعدادات" subtitle="بيانات الشركة، الفريق والصلاحيات، والبيانات" />
-      <Tabs name="settings-tab" value={tab} onChange={setTab} options={[{ value: 'company', label: '🏢 الشركة' }, ...(canTeam ? [{ value: 'team' as const, label: '👥 الفريق' }] : []), { value: 'data', label: '🗄️ البيانات' }]} />
+      <Tabs name="settings-tab" value={tab} onChange={setTab} options={[{ value: 'company', label: <><Building2 size={15} /> الشركة</> }, ...(canTeam ? [{ value: 'team' as const, label: <><Users size={15} /> الفريق</> }] : []), { value: 'data', label: <><Database size={15} /> البيانات</> }]} />
       <div style={{ height: '1.2rem' }} />
       {tab === 'company' && (can(profile!.role, 'team.manage') ? <CompanyTab /> : <EmptyState icon={<Building2 />} title="للمدراء فقط" />)}
       {tab === 'team' && canTeam && <TeamTab />}

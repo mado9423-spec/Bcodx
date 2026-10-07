@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Building2, CheckCircle2, Eye, EyeOff, Lock, Mail, MailCheck, Rocket, ShieldCheck, Sparkles, User, WifiOff } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ClipboardList, Eye, EyeOff, Lock, Mail, MailCheck, MessageCircle, Rocket, ShieldCheck, Sparkles, User, Wallet, WifiOff } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Field, TextInput } from '../components/ui/Fields';
 import { Segmented } from '../components/ui/Fields';
@@ -8,10 +8,10 @@ import { ROLE_LABELS, type Role } from '../data/types';
 import { authErrorMessage, DEMO_PROFILES, useAuth } from './AuthContext';
 
 const FEATURES = [
-  { icon: '🧾', text: 'طلبات المندوبين تصل فورًا وتخصم المخزون تلقائيًا' },
-  { icon: '💸', text: 'ائتمان ذكي: يمنع تجاوز الحد ويطلب موافقة المدير' },
-  { icon: '📲', text: 'كشف حساب وتذكير سداد بضغطة واحدة عبر واتساب' },
-  { icon: '📴', text: 'يعمل دون إنترنت في الميدان ويزامن عند عودة الاتصال' },
+  { icon: ClipboardList, text: 'طلبات المندوبين تصل فورًا وتخصم المخزون تلقائيًا' },
+  { icon: ShieldCheck, text: 'ائتمان ذكي: يمنع تجاوز الحد ويطلب موافقة المدير' },
+  { icon: MessageCircle, text: 'كشف حساب وتذكير سداد بضغطة واحدة عبر واتساب' },
+  { icon: WifiOff, text: 'يعمل دون إنترنت في الميدان ويزامن عند عودة الاتصال' },
 ];
 
 function HeroArt() {
@@ -56,21 +56,21 @@ function HeroArt() {
         </motion.g>
       </svg>
       <motion.div className="float-card fc1" animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}>
-        <span className="fc-ico" style={{ background: '#e6f9f1', color: '#067a4c' }}>✓</span>
+        <span className="fc-ico" style={{ background: '#e6f9f1', color: '#067a4c' }}><Check size={18} /></span>
         <div>
           <b>طلب جديد #2410-3FA</b>
           <span>سوبرماركت النور • 4,820 ر.س</span>
         </div>
       </motion.div>
       <motion.div className="float-card fc2" animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 0.6 }}>
-        <span className="fc-ico" style={{ background: '#ece8ff', color: '#4a2bd1' }}>💰</span>
+        <span className="fc-ico" style={{ background: '#ece8ff', color: '#4a2bd1' }}><Wallet size={18} /></span>
         <div>
           <b>تحصيل 3,500 ر.س</b>
           <span>المندوب أحمد • قبل دقيقتين</span>
         </div>
       </motion.div>
       <motion.div className="float-card fc3" animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 5.5, ease: 'easeInOut', delay: 1.2 }}>
-        <span className="fc-ico" style={{ background: '#fff6dd', color: '#8a5a00' }}>⚠</span>
+        <span className="fc-ico" style={{ background: '#fff6dd', color: '#8a5a00' }}><AlertTriangle size={18} /></span>
         <div>
           <b>مخزون منخفض</b>
           <span>مياه معدنية 330مل — بقي 12 كرتون</span>
@@ -99,7 +99,7 @@ function Hero() {
         <motion.ul initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.4 } } }}>
           {FEATURES.map((f) => (
             <motion.li key={f.text} variants={{ hidden: { opacity: 0, x: 24 }, show: { opacity: 1, x: 0 } }}>
-              <span>{f.icon}</span>
+              <span className="feat-ico"><f.icon size={18} /></span>
               {f.text}
             </motion.li>
           ))}

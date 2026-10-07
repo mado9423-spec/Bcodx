@@ -47,6 +47,19 @@
   --violet-bg: #eee9ff;
   --violet: #4a2bd1;
 
+  /* ---- ألوان الرسوم: مُدقَّقة بمدقّق dataviz (انظر docs/DESIGN.md) ---- */
+  --chart-1: #6d4aff; /* المبيعات */
+  --chart-2: #009e8f; /* التحصيل */
+  --chart-grid: #ebe8f7;
+  --chart-axis: #cfcae8;
+  --chart-label: #7d79a3;
+  /* أعمار الديون: رتبي بلون واحد — الأقدم أغمق (فاتح) / الأقدم أفتح (داكن) */
+  --age-0: #9b97c4; /* غير مستحق */
+  --age-1: #ee7f98; /* 1–30 */
+  --age-2: #dc4a73; /* 31–60 */
+  --age-3: #b52350; /* 61–90 */
+  --age-4: #85163a; /* +90 */
+
   --radius-sm: 10px;
   --radius: 16px;
   --radius-lg: 22px;
@@ -91,6 +104,16 @@
   --bad: #ff8fa6;
   --violet-bg: rgba(139, 115, 255, 0.2);
   --violet: #c1b4ff;
+  --chart-1: #8b73ff;
+  --chart-2: #00a899;
+  --chart-grid: #26224f;
+  --chart-axis: #3b3677;
+  --chart-label: #918dbd;
+  --age-0: #5a5690;
+  --age-1: #9c3558;
+  --age-2: #c64b73;
+  --age-3: #e8688c;
+  --age-4: #ff9db5;
   color-scheme: dark;
 }
 
@@ -128,6 +151,16 @@
     --bad: #ff8fa6;
     --violet-bg: rgba(139, 115, 255, 0.2);
     --violet: #c1b4ff;
+    --chart-1: #8b73ff;
+    --chart-2: #00a899;
+    --chart-grid: #26224f;
+    --chart-axis: #3b3677;
+    --chart-label: #918dbd;
+    --age-0: #5a5690;
+    --age-1: #9c3558;
+    --age-2: #c64b73;
+    --age-3: #e8688c;
+    --age-4: #ff9db5;
     color-scheme: dark;
   }
 }

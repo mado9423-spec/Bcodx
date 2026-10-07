@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LocateFixed } from 'lucide-react';
+import { Banknote, Handshake, LocateFixed, Lock, ShoppingCart, type LucideIcon } from 'lucide-react';
 import { useData } from '../../data/DataContext';
 import { useActions, useRun } from '../../data/useActions';
 import { VISIT_RESULT_LABELS, type Customer, type VisitResult } from '../../data/types';
@@ -7,7 +7,7 @@ import { Button } from '../ui/Button';
 import { Field, Switch, TextInput } from '../ui/Fields';
 import { Modal } from '../ui/Modal';
 
-const ICONS: Record<VisitResult, string> = { order: '🧾', collected: '💰', no_order: '🤝', closed: '🔒' };
+const ICONS: Record<VisitResult, LucideIcon> = { order: ShoppingCart, collected: Banknote, no_order: Handshake, closed: Lock };
 
 function getCoords(): Promise<{ lat: number; lng: number } | undefined> {
   return new Promise((resolve) => {
@@ -70,7 +70,7 @@ export function VisitModal({ open, onClose, customer }: { open: boolean; onClose
             <div className="visit-grid">
               {(Object.keys(VISIT_RESULT_LABELS) as VisitResult[]).map((r) => (
                 <button key={r} type="button" className="role-chip" aria-pressed={result === r} onClick={() => setResult(r)} style={result === r ? { borderColor: 'var(--brand)', background: 'var(--brand-50)' } : undefined}>
-                  <b>{ICONS[r]} {VISIT_RESULT_LABELS[r]}</b>
+                  <b className="row" style={{ gap: 8 }}>{(() => { const I = ICONS[r]; return <I size={17} />; })()} {VISIT_RESULT_LABELS[r]}</b>
                 </button>
               ))}
             </div>

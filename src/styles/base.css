@@ -111,6 +111,7 @@ svg {
   direction: ltr;
   unicode-bidi: isolate;
   display: inline-block;
+  white-space: nowrap;
 }
 .num {
   font-variant-numeric: tabular-nums;
