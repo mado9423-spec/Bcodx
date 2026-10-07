@@ -1,0 +1,40 @@
+{
+  "name": "bcodx",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Bcodx — منظومة إدارة الموزعين ومندوبي المبيعات (React + Firebase)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit",
+    "test": "vitest run",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-bcodx-rules \"vitest run --config vitest.rules.config.ts\"",
+    "emulators": "firebase emulators:start --only auth,firestore --project demo-bcodx",
+    "dev:emulator": "VITE_USE_EMULATOR=true VITE_FIREBASE_API_KEY=demo VITE_FIREBASE_PROJECT_ID=demo-bcodx VITE_FIREBASE_APP_ID=demo vite"
+  },
+  "dependencies": {
+    "@fontsource-variable/cairo": "^5.3.0",
+    "firebase": "^12.19.0",
+    "framer-motion": "^14.0.0",
+    "lucide-react": "^1.52.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.3",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
