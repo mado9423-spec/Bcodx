@@ -1,0 +1,186 @@
+rules_version = '2';
+
+// =====================================================================
+//  Bcodx — قواعد أمان Firestore
+//  - كل شركة معزولة تمامًا: companies/{companyId}/...
+//  - الصلاحيات حسب الدور (owner / manager / rep / storekeeper / accountant)
+//    والدور يُقرأ من users/{uid} (لا يمكن للمستخدم تعديله بنفسه).
+//  - المندوب لا يقرأ إلا طلباته وتحصيلاته وزياراته.
+//  - المخزون لا ينزل تحت الصفر، وسجل حركات المخزون غير قابل للتعديل.
+//  ملاحظة: الأرصدة المخزّنة (balance) تُحدَّث من العميل بعمليات ذرّية؛
+//  لمنع التلاعب الكامل انقل عمليات الترحيل إلى Cloud Functions (انظر docs/ARCHITECTURE.md).
+// =====================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- دوال مساعدة ----------
+    function signedIn() {
+      return request.auth != null;
+    }
+    function profilePath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+    function hasProfile() {
+      return signedIn() && exists(profilePath(request.auth.uid));
+    }
+    function me() {
+      return get(profilePath(request.auth.uid)).data;
+    }
+    function inCompany(cid) {
+      return hasProfile() && me().companyId == cid;
+    }
+    function hasRole(cid, roles) {
+      return inCompany(cid) && me().role in roles;
+    }
+    function isManager(cid) {
+      return hasRole(cid, ['owner', 'manager']);
+    }
+    function myRepId() {
+      return me().get('repId', null);
+    }
+    function emailKey() {
+      return request.auth.token.email.lower();
+    }
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    // ---------- المستخدمون ----------
+    function ownerBootstrap() {
+      let d = request.resource.data;
+      return d.role == 'owner'
+        && d.keys().hasOnly(['uid', 'name', 'email', 'role', 'companyId', 'createdAt'])
+        && !exists(/databases/$(database)/documents/companies/$(d.companyId))
+        && getAfter(/databases/$(database)/documents/companies/$(d.companyId)).data.ownerUid == request.auth.uid;
+    }
+    function inviteClaim() {
+      let d = request.resource.data;
+      let invPath = /databases/$(database)/documents/invites/$(emailKey());
+      return request.auth.token.email_verified == true
+        && exists(invPath)
+        && d.keys().hasOnly(['uid', 'name', 'email', 'role', 'companyId', 'repId', 'createdAt'])
+        && d.companyId == get(invPath).data.companyId
+        && d.role == get(invPath).data.role
+        && d.get('repId', null) == get(invPath).data.get('repId', null)
+        && d.email == emailKey();
+    }
+
+    match /users/{uid} {
+      allow get: if signedIn() && (request.auth.uid == uid || (hasProfile() && isManager(resource.data.companyId)));
+      allow list: if hasProfile() && isManager(resource.data.companyId);
+      allow create: if signedIn() && request.auth.uid == uid && !hasProfile() && (ownerBootstrap() || inviteClaim());
+      allow update: if hasProfile() && (
+        (request.auth.uid == uid && changedKeys().hasOnly(['name']))
+        || (hasRole(resource.data.companyId, ['owner']) && uid != request.auth.uid
+            && request.resource.data.companyId == resource.data.companyId
+            && request.resource.data.role in ['manager', 'rep', 'storekeeper', 'accountant'])
+      );
+      allow delete: if hasProfile() && hasRole(resource.data.companyId, ['owner']) && uid != request.auth.uid;
+    }
+
+    // ---------- الدعوات (المفتاح = البريد بحروف صغيرة) ----------
+    match /invites/{email} {
+      allow get: if signedIn() && emailKey() == email;
+      allow list: if hasProfile() && isManager(resource.data.companyId);
+      allow create, update: if hasProfile() && isManager(request.resource.data.companyId)
+        && request.resource.data.email == email
+        && request.resource.data.role in ['manager', 'rep', 'storekeeper', 'accountant'];
+      allow delete: if signedIn() && (emailKey() == email || (hasProfile() && isManager(resource.data.companyId)));
+    }
+
+    // ---------- الشركة ----------
+    match /companies/{cid} {
+      allow get: if inCompany(cid);
+      allow create: if signedIn() && !hasProfile()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.id == cid;
+      allow update: if isManager(cid) && request.resource.data.ownerUid == resource.data.ownerUid;
+      allow delete: if false;
+
+      // مرجعيات يقرؤها كل أعضاء الشركة
+      match /zones/{id} {
+        allow read: if inCompany(cid);
+        allow write: if isManager(cid);
+      }
+      match /reps/{id} {
+        allow read: if inCompany(cid);
+        allow write: if isManager(cid);
+      }
+      match /offers/{id} {
+        allow read: if inCompany(cid);
+        allow write: if isManager(cid);
+      }
+      match /warehouses/{id} {
+        allow read: if inCompany(cid);
+        allow write: if hasRole(cid, ['owner', 'manager', 'storekeeper']);
+      }
+      match /products/{id} {
+        allow read: if inCompany(cid);
+        allow create, update: if hasRole(cid, ['owner', 'manager', 'storekeeper']);
+        allow delete: if isManager(cid);
+      }
+
+      // العملاء: المندوب والمخزني يحدّثان حقولًا محدودة فقط (الترحيل المحاسبي)
+      match /customers/{id} {
+        allow read: if inCompany(cid);
+        // العميل الجديد من المندوب يبدأ بلا رصيد وبحد ائتماني صفر حتى يحدده المدير
+        allow create: if hasRole(cid, ['owner', 'manager', 'accountant'])
+          || (hasRole(cid, ['rep']) && request.resource.data.balance == 0 && request.resource.data.creditLimit == 0);
+        allow update: if hasRole(cid, ['owner', 'manager', 'accountant'])
+          || (hasRole(cid, ['rep'])
+              && changedKeys().hasOnly(['name', 'contact', 'phone', 'address', 'zoneId', 'notes', 'active', 'balance', 'lastOrderAt', 'lastVisitAt', 'promiseDate', 'promiseAmount']))
+          || (hasRole(cid, ['storekeeper']) && changedKeys().hasOnly(['balance']));
+        allow delete: if isManager(cid);
+      }
+
+      // المخزون: لا كميات سالبة
+      match /stock/{id} {
+        allow read: if inCompany(cid);
+        allow create, update: if hasRole(cid, ['owner', 'manager', 'storekeeper', 'rep'])
+          && request.resource.data.qty is number
+          && request.resource.data.qty >= 0;
+        allow delete: if false;
+      }
+      // سجل الحركات: إضافة فقط
+      match /stockMovements/{id} {
+        allow read: if inCompany(cid);
+        allow create: if hasRole(cid, ['owner', 'manager', 'storekeeper', 'rep']);
+        allow update, delete: if false;
+      }
+
+      // الطلبات: المندوب يرى ويُنشئ طلباته فقط
+      match /orders/{id} {
+        allow read: if isManager(cid) || hasRole(cid, ['storekeeper', 'accountant'])
+          || (hasRole(cid, ['rep']) && resource.data.repId == myRepId());
+        allow create: if isManager(cid)
+          || (hasRole(cid, ['rep']) && request.resource.data.repId == myRepId());
+        allow update: if hasRole(cid, ['owner', 'manager', 'storekeeper']);
+        allow delete: if false;
+      }
+
+      // التحصيل: إلغاء السند = تغيير الحالة فقط
+      match /collections/{id} {
+        allow read: if isManager(cid) || hasRole(cid, ['storekeeper', 'accountant'])
+          || (hasRole(cid, ['rep']) && resource.data.repId == myRepId());
+        allow create: if hasRole(cid, ['owner', 'manager', 'accountant'])
+          || (hasRole(cid, ['rep']) && request.resource.data.repId == myRepId());
+        allow update: if hasRole(cid, ['owner', 'manager', 'accountant', 'storekeeper']) && changedKeys().hasOnly(['status']);
+        allow delete: if false;
+      }
+
+      // الزيارات
+      match /visits/{id} {
+        allow read: if isManager(cid) || hasRole(cid, ['storekeeper', 'accountant'])
+          || (hasRole(cid, ['rep']) && resource.data.repId == myRepId());
+        allow create: if isManager(cid)
+          || (hasRole(cid, ['rep']) && request.resource.data.repId == myRepId());
+        allow update, delete: if false;
+      }
+    }
+
+    // أي مسار آخر مرفوض
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

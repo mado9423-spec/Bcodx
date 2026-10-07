@@ -1,0 +1,166 @@
+/* ============ Bcodx design tokens ============ */
+:root {
+  --font: 'Cairo Variable', 'Cairo', system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+
+  /* brand */
+  --brand: #6d4aff;
+  --brand-600: #5b39f0;
+  --brand-700: #4a2bd1;
+  --brand-100: #ece8ff;
+  --brand-50: #f5f3ff;
+  --c-teal: #00b8a9;
+  --c-blue: #3b82f6;
+  --c-amber: #f5b50a;
+  --c-orange: #ff9a3c;
+  --c-coral: #ff6b5b;
+  --c-rose: #e5385f;
+  --c-pink: #ec4899;
+  --c-green: #12b76a;
+
+  /* surfaces (light) */
+  --bg: #f4f2ff;
+  --bg-grad: radial-gradient(1100px 520px at 85% -10%, #e4dcff 0%, transparent 60%), radial-gradient(900px 480px at -10% 10%, #d7f6f1 0%, transparent 55%);
+  --surface: #ffffff;
+  --surface-2: #faf9ff;
+  --surface-3: #f0edff;
+  --glass: rgba(255, 255, 255, 0.72);
+  --border: #e6e2f7;
+  --border-strong: #d4cdf0;
+  --text: #1b1740;
+  --text-2: #4b4777;
+  --muted: #7d79a3;
+  --shadow-sm: 0 1px 2px rgba(40, 20, 120, 0.06), 0 2px 8px rgba(40, 20, 120, 0.05);
+  --shadow: 0 4px 16px rgba(60, 30, 160, 0.09), 0 1px 3px rgba(40, 20, 120, 0.06);
+  --shadow-lg: 0 24px 60px rgba(60, 30, 160, 0.22), 0 6px 18px rgba(40, 20, 120, 0.1);
+  --ring: 0 0 0 3px rgba(109, 74, 255, 0.28);
+
+  --ok-bg: #e6f9f1;
+  --ok: #067a4c;
+  --info-bg: #e8f1ff;
+  --info: #1d4fb8;
+  --warn-bg: #fff6dd;
+  --warn: #8a5a00;
+  --orange-bg: #ffeedd;
+  --orange: #a04a00;
+  --bad-bg: #ffe9ec;
+  --bad: #b01e3c;
+  --violet-bg: #eee9ff;
+  --violet: #4a2bd1;
+
+  /* ---- ألوان الرسوم: مُدقَّقة بمدقّق dataviz (انظر docs/DESIGN.md) ---- */
+  --chart-1: #6d4aff; /* المبيعات */
+  --chart-2: #009e8f; /* التحصيل */
+  --chart-grid: #ebe8f7;
+  --chart-axis: #cfcae8;
+  --chart-label: #7d79a3;
+  /* أعمار الديون: رتبي بلون واحد — الأقدم أغمق (فاتح) / الأقدم أفتح (داكن) */
+  --age-0: #9b97c4; /* غير مستحق */
+  --age-1: #ee7f98; /* 1–30 */
+  --age-2: #dc4a73; /* 31–60 */
+  --age-3: #b52350; /* 61–90 */
+  --age-4: #85163a; /* +90 */
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --sidebar-w: 268px;
+  --topbar-h: 68px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --brand: #8b73ff;
+  --brand-600: #7b60ff;
+  --brand-700: #a392ff;
+  --brand-100: #2a2358;
+  --brand-50: #1f1a45;
+  --bg: #0f0d24;
+  --bg-grad: radial-gradient(1000px 520px at 85% -10%, rgba(109, 74, 255, 0.28) 0%, transparent 60%), radial-gradient(800px 460px at -10% 10%, rgba(0, 184, 169, 0.16) 0%, transparent 55%);
+  --surface: #181536;
+  --surface-2: #1d1a3f;
+  --surface-3: #25214d;
+  --glass: rgba(24, 21, 54, 0.72);
+  --border: #2d2960;
+  --border-strong: #3b3677;
+  --text: #f1efff;
+  --text-2: #c4c0ee;
+  --muted: #918dbd;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.6);
+  --ring: 0 0 0 3px rgba(139, 115, 255, 0.4);
+
+  --ok-bg: rgba(18, 183, 106, 0.16);
+  --ok: #4ade9c;
+  --info-bg: rgba(59, 130, 246, 0.18);
+  --info: #8fb8ff;
+  --warn-bg: rgba(245, 181, 10, 0.16);
+  --warn: #ffd466;
+  --orange-bg: rgba(255, 154, 60, 0.16);
+  --orange: #ffb877;
+  --bad-bg: rgba(229, 56, 95, 0.18);
+  --bad: #ff8fa6;
+  --violet-bg: rgba(139, 115, 255, 0.2);
+  --violet: #c1b4ff;
+  --chart-1: #8b73ff;
+  --chart-2: #00a899;
+  --chart-grid: #26224f;
+  --chart-axis: #3b3677;
+  --chart-label: #918dbd;
+  --age-0: #5a5690;
+  --age-1: #9c3558;
+  --age-2: #c64b73;
+  --age-3: #e8688c;
+  --age-4: #ff9db5;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --brand: #8b73ff;
+    --brand-600: #7b60ff;
+    --brand-700: #a392ff;
+    --brand-100: #2a2358;
+    --brand-50: #1f1a45;
+    --bg: #0f0d24;
+    --bg-grad: radial-gradient(1000px 520px at 85% -10%, rgba(109, 74, 255, 0.28) 0%, transparent 60%), radial-gradient(800px 460px at -10% 10%, rgba(0, 184, 169, 0.16) 0%, transparent 55%);
+    --surface: #181536;
+    --surface-2: #1d1a3f;
+    --surface-3: #25214d;
+    --glass: rgba(24, 21, 54, 0.72);
+    --border: #2d2960;
+    --border-strong: #3b3677;
+    --text: #f1efff;
+    --text-2: #c4c0ee;
+    --muted: #918dbd;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.6);
+    --ring: 0 0 0 3px rgba(139, 115, 255, 0.4);
+    --ok-bg: rgba(18, 183, 106, 0.16);
+    --ok: #4ade9c;
+    --info-bg: rgba(59, 130, 246, 0.18);
+    --info: #8fb8ff;
+    --warn-bg: rgba(245, 181, 10, 0.16);
+    --warn: #ffd466;
+    --orange-bg: rgba(255, 154, 60, 0.16);
+    --orange: #ffb877;
+    --bad-bg: rgba(229, 56, 95, 0.18);
+    --bad: #ff8fa6;
+    --violet-bg: rgba(139, 115, 255, 0.2);
+    --violet: #c1b4ff;
+    --chart-1: #8b73ff;
+    --chart-2: #00a899;
+    --chart-grid: #26224f;
+    --chart-axis: #3b3677;
+    --chart-label: #918dbd;
+    --age-0: #5a5690;
+    --age-1: #9c3558;
+    --age-2: #c64b73;
+    --age-3: #e8688c;
+    --age-4: #ff9db5;
+    color-scheme: dark;
+  }
+}
